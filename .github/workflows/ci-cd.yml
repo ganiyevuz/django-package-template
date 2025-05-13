@@ -1,0 +1,63 @@
+name: Django Package CI/CD
+
+on:
+  push:
+    branches: [ branch ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ branch ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.12']
+        django-version: ['5.2']
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install uv
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+    - name: Set up Python with uv and create virtual environment
+      run: |
+        uv python install ${{ matrix.python-version }}
+        uv venv
+    - name: Install dependencies
+      run: |
+        uv install "Django~=${{ matrix.django-version }}.0"
+        uv install -e ".[dev]"
+    - name: Lint with flake8
+      run: |
+        uv run flake8 tests
+    - name: Test with pytest
+      run: |
+        uv run pytest --cov
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install uv
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+    - name: Set up Python with uv and create virtual environment
+      run: |
+        uv python install 3.12
+        uv venv
+    - name: Install dependencies
+      run: |
+        uv install build twine
+    - name: Build and publish
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        uv run python -m build
+        uv run twine upload dist/*
