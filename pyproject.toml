@@ -1,81 +1,50 @@
-[build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
-name = "django-package-name"
+name = "django-package-template"
 version = "0.1.0"
-description = "A Django package template"
+description = "A modern, production-ready template for building reusable Django packages"
 readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
 authors = [
-    {name = "Jakhongir Ganiev", email = "your.email@example.com"}
+    { name = "Jakhongir Ganiev", email = "contact@jakhongir.dev" }
 ]
-license = {text = "MIT"}
-requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Framework :: Django",
-    "Framework :: Django :: 4.2",
-    "Framework :: Django :: 5.0",
-    "Framework :: Django :: 5.1",
-    "Framework :: Django :: 5.2",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
-keywords = ["django", "package", "template"]
-dependencies = [
-    "Django>=4.2,<5.3",
-]
+keywords = ["django", "template", "package", "boilerplate", "reusable", "plugin"]
 
-[project.urls]
-Homepage = "https://github.com/yourusername/django-package-name"
-Repository = "https://github.com/yourusername/django-package-name"
-Issues = "https://github.com/yourusername/django-package-name/issues"
-
-[tool.setuptools]
-packages = {find = {exclude = ["tests*", "example*"]}}
+dependencies = ["django>=4.2,<5.3"]
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.3.1",
-    "pytest-django>=4.5.2",
-    "pytest-cov>=4.1.0",
-    "flake8>=6.0.0",
-    "black>=23.3.0",
-    "isort>=5.12.0",
-    "build>=1.0.3",
-    "twine>=4.0.2",
+    "black>=25.1.0",
+    "build>=1.2.2.post1",
+    "flake8>=7.2.0",
+    "isort>=6.0.1",
+    "pytest>=8.3.5",
+    "pytest-cov>=6.1.1",
+    "pytest-django>=4.11.1",
+    "twine>=6.1.0",
 ]
+
+[tool.setuptools]
+packages = { find = { where = ["src"] } }
 
 [tool.black]
 line-length = 88
-target-version = ['py310', 'py311', 'py312']
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-  | migrations
-)/
-'''
+target-version = ["py310", "py311", "py312"]
 
 [tool.isort]
 profile = "black"
 multi_line_output = 3
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "tests.settings"
 testpaths = ["tests"]
 python_files = ["test_*.py"]
