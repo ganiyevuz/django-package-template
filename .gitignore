@@ -58,6 +58,9 @@ db.sqlite3
 db.sqlite3-journal
 media/
 
+# Example project
+example/
+
 # Flask stuff:
 instance/
 .webassets-cache
